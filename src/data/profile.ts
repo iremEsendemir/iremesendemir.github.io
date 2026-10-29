@@ -90,6 +90,7 @@ export const research = {
   advisor: 'Assoc. Prof. Ercüment Çiçek',
   period: 'Jan 2026 – Present',
   bullets: [
+    'Currently working on RNA–protein interaction prediction.',
     'Developed an RNA–protein interaction prediction pipeline using RNA-FM, ESM2-650M, convolutional projections, bidirectional cross-attention, and an MLP classifier.',
     'Trained on ~3M RNA–protein pairs; evaluated generalization with cross-validation and a cluster-disjoint test set built with CD-HIT-EST and MMseqs2.',
     'Found that 56.9% of a nominally novel evaluation set (673 of 1,182 NPInter5 pairs) contained an RNA or protein cluster already represented in training data.',

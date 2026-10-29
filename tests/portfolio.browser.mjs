@@ -115,6 +115,14 @@ try {
   assert.equal(await evaluate('document.querySelectorAll("#top a[href=\\"http://ciceklab.cs.bilkent.edu.tr\\"]").length'), 0);
   assert.equal(await evaluate('document.querySelector("#research a[href=\\"http://ciceklab.cs.bilkent.edu.tr\\"]").target'), '_blank');
   assert.equal(await evaluate('document.querySelectorAll("a[href=\\"http://ciceklab.cs.bilkent.edu.tr\\"]").length'), 1);
+  assert.equal(await evaluate('document.querySelector("#research ul > li:first-child").textContent'), 'Currently working on RNA–protein interaction prediction.');
+  assert.equal(await evaluate('document.querySelectorAll("#research ul > li").length'), 4);
+  assert.ok(await evaluate(`(() => {
+    const items = document.querySelectorAll('#research ul > li');
+    const first = getComputedStyle(items[0]);
+    const second = getComputedStyle(items[1]);
+    return first.fontWeight === second.fontWeight && first.fontSize === second.fontSize && first.color === second.color;
+  })()`), 'Current work uses the same styling as the other research bullets');
   assert.equal(await evaluate('document.querySelectorAll("#top h1 .u-mark, #contact h2 .u-mark").length'), 0);
   assert.ok(await evaluate(`(() => {
     const cards = [...document.querySelectorAll('#projects article[data-project-size=full]')].map(el => el.getBoundingClientRect());
