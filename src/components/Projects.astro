@@ -1,0 +1,70 @@
+---
+import Section from './Section.astro';
+import Gallery from './Gallery.astro';
+import Sketch from './Sketch.astro';
+import ProjectIcon from './ProjectIcon.astro';
+import { projects } from '../data/profile';
+const mainProjects = projects.filter((p) => !p.compact);
+const smallProjects = projects.filter((p) => p.compact);
+---
+
+<Section id="projects" eyebrow="03" title="Projects">
+  <div class="space-y-8">
+    {mainProjects.map((p) => (
+      <article class="card reveal p-6 sm:p-8 lg:p-10" data-project-size="full">
+        <div class="grid gap-8 lg:grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] lg:gap-12">
+          <header>
+            <p class="font-mono text-xs text-ink-faint mb-2">{p.period}</p>
+            <div class="flex items-start justify-between gap-4">
+              <div class="min-w-0">
+                <h3 class={p.featured ? 'text-4xl sm:text-5xl leading-none' : 'text-3xl leading-tight'}>{p.name}</h3>
+                <p class="text-ink-soft mt-2">{p.subtitle}</p>
+              </div>
+              {p.sketch && <Sketch kind={p.sketch} class="w-24 sm:w-28 shrink-0 hidden sm:block" />}
+            </div>
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              {p.stack.map((t) => <span class="tag">{t}</span>)}
+            </div>
+            {p.links && (
+              <div class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                {p.links.map((l) => <a href={l.href} target="_blank" rel="noopener" class="link text-ink-soft" aria-label={l.label === 'GitHub' ? `${p.name} on GitHub` : undefined}>{l.label} ↗</a>)}
+              </div>
+            )}
+          </header>
+          <div>
+            <p class="text-ink-soft leading-relaxed">{p.description}</p>
+            <ul class="mt-5 space-y-2.5 text-[0.95rem] leading-relaxed text-ink-soft list-disc pl-5 marker:text-lavender">
+              {p.highlights.map((h) => <li>{h}</li>)}
+            </ul>
+          </div>
+        </div>
+        {p.images && (
+          <div class="mt-8">
+            <Gallery images={p.images} layout="grid" />
+          </div>
+        )}
+      </article>
+    ))}
+  </div>
+  <div class="mt-8 grid gap-6 sm:grid-cols-2">
+    {smallProjects.map((p) => (
+      <article class="card reveal p-5 sm:p-6" data-project-size="compact">
+        <div class="flex items-center justify-between gap-4">
+          <h3 class="text-2xl leading-tight">{p.name}</h3>
+          {p.icon && <ProjectIcon kind={p.icon} />}
+        </div>
+        <p class="mt-3 text-sm leading-relaxed text-ink-soft">{p.description}</p>
+        {p.stack.length > 0 && (
+          <div class="mt-4 flex flex-wrap gap-1.5">
+            {p.stack.map((t) => <span class="tag">{t}</span>)}
+          </div>
+        )}
+        {p.links && (
+          <div class="mt-4 flex flex-wrap gap-4 text-sm">
+            {p.links.map((l) => <a href={l.href} target="_blank" rel="noopener" class="link text-ink-soft" aria-label={`${p.name} on GitHub`}>{l.label} ↗</a>)}
+          </div>
+        )}
+      </article>
+    ))}
+  </div>
+</Section>

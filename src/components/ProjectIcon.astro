@@ -1,0 +1,37 @@
+---
+import type { Project } from '../data/profile';
+
+interface Props {
+  kind: NonNullable<Project['icon']>;
+}
+const { kind } = Astro.props;
+---
+
+<svg class="project-icon" data-project-icon={kind} viewBox="0 0 48 48" width="40" height="40" aria-hidden="true" focusable="false">
+  {kind === 'recipe' && (
+    <>
+      <path class="pot-handles" d="M11 26H8a3 3 0 0 0 0 6h4M37 26h3a3 3 0 0 1 0 6h-4" />
+      <path class="pot-body" d="M11 23h26l-1.5 11.5Q35 40 29 40H19q-6 0-6.5-5.5Z" />
+      <path class="pot-lid" d="M9 23c1-5 8-7 15-7s14 2 15 7Z" />
+      <rect class="pot-knob" x="20.5" y="12.5" width="7" height="4" rx="2" />
+      <path class="steam" d="M20 8c-2-2 2-3 0-5M28 8c-2-2 2-3 0-5" />
+    </>
+  )}
+  {kind === 'uart' && (
+    <>
+      <rect class="chip" x="14" y="13" width="20" height="22" rx="3" />
+      <path d="M9 18h5m-5 6h5m-5 6h5m20-12h5m-5 6h5m-5 6h5M20 8v5m8-5v5M20 35v5m8-5v5" />
+      <path class="signal" d="M18 27h4v-6h5v6h3" />
+    </>
+  )}
+</svg>
+
+<style>
+  .project-icon { display: block; flex-shrink: 0; }
+  path, rect { fill: none; stroke: var(--ink-faint); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .pot-body, .chip { fill: var(--lavender-soft); }
+  .pot-lid { fill: color-mix(in srgb, var(--sage) 18%, var(--bg-elev)); }
+  .pot-knob { fill: var(--mauve); }
+  .steam { stroke: var(--mauve); }
+  .signal { stroke: var(--sage); }
+</style>

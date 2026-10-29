@@ -1,0 +1,240 @@
+---
+// Small, looping SVG illustrations tied to the engineering behind each item.
+// Pure CSS animations; paused under prefers-reduced-motion.
+import type { Sketch } from '../data/profile';
+interface Props {
+  kind: Sketch;
+  class?: string;
+}
+const { kind, class: cls = '' } = Astro.props;
+---
+
+<div class={`sketch ${cls}`} data-kind={kind} aria-hidden="true">
+  {kind === 'shards' && (
+    <svg viewBox="0 0 120 72">
+      <!-- three worker nodes -->
+      <g class="s-stroke">
+        <rect x="6" y="40" width="30" height="26" rx="3" />
+        <rect x="45" y="40" width="30" height="26" rx="3" />
+        <rect x="84" y="40" width="30" height="26" rx="3" />
+        <!-- coordinator -->
+        <rect x="45" y="6" width="30" height="16" rx="3" />
+        <path d="M60 22 v6 M60 28 H21 v12 M60 28 v12 M60 28 h39 v12" />
+      </g>
+      <!-- shards travel from coordinator to nodes, then one rebalances -->
+      <g class="shards">
+        <rect class="sh sh1" x="11" y="46" width="6" height="6" rx="1" />
+        <rect class="sh sh2" x="19" y="46" width="6" height="6" rx="1" />
+        <rect class="sh sh3" x="27" y="46" width="6" height="6" rx="1" />
+        <rect class="sh sh4" x="50" y="46" width="6" height="6" rx="1" />
+        <rect class="sh sh5" x="58" y="46" width="6" height="6" rx="1" />
+        <rect class="sh sh6" x="89" y="46" width="6" height="6" rx="1" />
+        <rect class="sh sh7" x="97" y="46" width="6" height="6" rx="1" />
+        <rect class="sh sh8 skew" x="11" y="54" width="6" height="6" rx="1" />
+        <rect class="sh sh9 skew" x="19" y="54" width="6" height="6" rx="1" />
+      </g>
+    </svg>
+  )}
+
+  {kind === 'waveform' && (
+    <svg viewBox="0 0 120 72">
+      <g class="wave">
+        {Array.from({ length: 21 }).map((_, i) => (
+          <rect x={6 + i * 5.4} y="30" width="2.6" height="12" rx="1.3" style={`--i:${i}`} />
+        ))}
+      </g>
+      <g class="s-stroke faint"><path d="M4 36 H116" /></g>
+    </svg>
+  )}
+
+  {kind === 'query-to-code' && (
+    <svg viewBox="0 0 120 72">
+      <!-- question bubble -->
+      <g class="s-stroke">
+        <path d="M8 14 h40 a4 4 0 0 1 4 4 v14 a4 4 0 0 1 -4 4 h-26 l-7 6 v-6 h-7 a4 4 0 0 1 -4 -4 v-14 a4 4 0 0 1 4 -4z" />
+      </g>
+      <g class="typed">
+        <rect x="14" y="20" width="22" height="2.4" rx="1.2" />
+        <rect x="14" y="26" width="30" height="2.4" rx="1.2" />
+      </g>
+      <!-- arrow -->
+      <g class="s-stroke arrow"><path d="M58 34 h14 M68 30 l4 4 -4 4" /></g>
+      <!-- code block -->
+      <g class="s-stroke"><rect x="78" y="22" width="36" height="30" rx="3" /></g>
+      <g class="code">
+        <rect x="84" y="29" width="10" height="2.4" rx="1.2" />
+        <rect x="96" y="29" width="12" height="2.4" rx="1.2" class="c2" />
+        <rect x="88" y="35" width="18" height="2.4" rx="1.2" class="c3" />
+        <rect x="88" y="41" width="12" height="2.4" rx="1.2" class="c2" />
+        <rect x="84" y="47" width="6" height="2.4" rx="1.2" />
+      </g>
+    </svg>
+  )}
+
+  {kind === 'impact-graph' && (
+    <svg viewBox="0 0 120 72">
+      <!-- edges, drawn progressively -->
+      <g class="edges s-stroke">
+        <path class="e e1" d="M30 36 L62 18" />
+        <path class="e e2" d="M30 36 L62 36" />
+        <path class="e e3" d="M30 36 L62 54" />
+        <path class="e e4" d="M62 18 L94 26" />
+        <path class="e e5" d="M62 36 L94 26" />
+        <path class="e e6" d="M62 54 L94 50" />
+      </g>
+      <!-- files -->
+      <g class="files">
+        <rect class="f changed" x="20" y="28" width="16" height="18" rx="2" />
+        <rect class="f n1" x="54" y="10" width="16" height="18" rx="2" />
+        <rect class="f n2" x="54" y="28" width="16" height="18" rx="2" />
+        <rect class="f n3" x="54" y="46" width="16" height="18" rx="2" />
+        <rect class="f n4" x="86" y="18" width="16" height="18" rx="2" />
+        <rect class="f n5" x="86" y="42" width="16" height="18" rx="2" />
+      </g>
+    </svg>
+  )}
+
+  {kind === 'canvas' && (
+    <svg viewBox="0 0 180 112">
+      <rect class="canvas-prompt" x="8" y="8" width="105" height="19" rx="9.5" />
+      <path class="prompt-star" d="M19 12 L21 16 L25 17 L21 18 L19 22 L18 18 L14 17 L18 16 Z" />
+      <g class="typed"><rect x="32" y="16" width="68" height="2.4" rx="1.2" /></g>
+      <g class="s-stroke"><rect x="8" y="35" width="164" height="69" rx="5" /><path d="M8 47 H172" /></g>
+      <g class="browser-dots"><circle cx="16" cy="41" r="1.4" /><circle cx="22" cy="41" r="1.4" /><circle cx="28" cy="41" r="1.4" /></g>
+      <g class="canvas-layout">
+        <rect class="layout-title" x="19" y="58" width="52" height="5" rx="2" />
+        <path class="layout-copy" d="M19 71 H82 M19 77 H65" />
+        <rect class="layout-button" x="19" y="85" width="26" height="10" rx="3" />
+        <g class="editable-tile">
+          <rect class="layout-image" x="104" y="57" width="54" height="35" rx="3" />
+          <path class="landscape-line" d="M107 86 L122 70 L133 81 L141 75 L155 89" />
+          <circle class="landscape-sun" cx="145" cy="66" r="3.5" />
+          <rect class="selection-box" x="101" y="54" width="60" height="41" />
+          <g class="selection-handles">
+            <rect x="99" y="52" width="4" height="4" /><rect x="159" y="52" width="4" height="4" />
+            <rect x="99" y="93" width="4" height="4" /><rect x="159" y="93" width="4" height="4" />
+          </g>
+        </g>
+      </g>
+      <path class="canvas-cursor" d="M144 83 L146 99 L150 94 L155 94 Z" />
+    </svg>
+  )}
+
+  {kind === 'schedule' && (
+    <svg viewBox="0 0 120 72">
+      <g class="s-stroke faint">
+        {Array.from({ length: 4 }).map((_, r) => (
+          <path d={`M8 ${12 + r * 14} H112`} />
+        ))}
+        {Array.from({ length: 8 }).map((_, c) => (
+          <path d={`M${8 + c * 14.86} 12 V 68`} />
+        ))}
+      </g>
+      <g class="cells">
+        {[
+          [0, 0], [2, 0], [5, 0], [1, 1], [3, 1], [6, 1], [0, 2], [4, 2], [6, 2], [2, 3], [3, 3], [5, 3],
+        ].map(([c, r], i) => (
+          <rect x={10 + c * 14.86} y={14 + r * 14} width="10.9" height="10" rx="1.5" style={`--i:${i}`} />
+        ))}
+      </g>
+    </svg>
+  )}
+</div>
+
+<style>
+  .sketch { color: var(--ink); }
+  .sketch svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .s-stroke { fill: none; stroke: var(--ink-faint); stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+  .s-stroke.faint { stroke: var(--line); }
+
+  /* shards */
+  .sh { fill: var(--lavender); transform-box: fill-box; transform-origin: center; animation: shard-in 6s ease-in-out infinite; }
+  .sh.skew { fill: var(--mauve); }
+  .sh1 { animation-delay: .1s } .sh2 { animation-delay: .2s } .sh3 { animation-delay: .3s }
+  .sh4 { animation-delay: .4s } .sh5 { animation-delay: .5s } .sh6 { animation-delay: .6s } .sh7 { animation-delay: .7s }
+  .sh8 { animation: shard-rebalance-a 6s ease-in-out infinite; }
+  .sh9 { animation: shard-rebalance-b 6s ease-in-out infinite; }
+  @keyframes shard-in {
+    0% { opacity: 0; transform: translateY(-30px) scale(.6); }
+    12%, 100% { opacity: 1; transform: none; }
+  }
+  @keyframes shard-rebalance-a {
+    0% { opacity: 0; transform: translateY(-30px) scale(.6); }
+    14%, 45% { opacity: 1; transform: none; }
+    60%, 100% { opacity: 1; transform: translate(55px, -8px); }
+  }
+  @keyframes shard-rebalance-b {
+    0% { opacity: 0; transform: translateY(-30px) scale(.6); }
+    16%, 50% { opacity: 1; transform: none; }
+    65%, 100% { opacity: 1; transform: translate(86px, -8px); }
+  }
+
+  /* waveform */
+  .wave rect { fill: var(--sage); transform-box: fill-box; transform-origin: center; animation: wave 1.8s ease-in-out infinite; animation-delay: calc(var(--i) * -0.09s); }
+  @keyframes wave {
+    0%, 100% { transform: scaleY(.25); }
+    30% { transform: scaleY(1.6); }
+    60% { transform: scaleY(.6); }
+  }
+
+  /* query -> code */
+  .typed rect { fill: var(--ink-faint); transform-box: fill-box; transform-origin: left; animation: type 5s ease-in-out infinite; }
+  .typed rect:nth-child(2) { animation-delay: .5s; }
+  .arrow { animation: pulse-stroke 5s ease-in-out infinite; }
+  .code rect { fill: var(--lavender); transform-box: fill-box; transform-origin: left; animation: type 5s ease-in-out infinite; animation-delay: 1.6s; }
+  .code rect.c2 { fill: var(--mauve); }
+  .code rect.c3 { fill: var(--sage); }
+  .code rect:nth-child(2) { animation-delay: 1.8s } .code rect:nth-child(3) { animation-delay: 2.1s }
+  .code rect:nth-child(4) { animation-delay: 2.4s } .code rect:nth-child(5) { animation-delay: 2.7s }
+  @keyframes type { 0% { transform: scaleX(0); } 12%, 85% { transform: scaleX(1); } 95%, 100% { transform: scaleX(0); } }
+  @keyframes pulse-stroke { 0%, 20% { stroke: var(--line); } 30%, 80% { stroke: var(--ink); } 100% { stroke: var(--line); } }
+
+
+  /* impact graph */
+  .files .f { fill: var(--bg-elev); stroke: var(--ink-faint); stroke-width: 1.2; }
+  .files .changed { fill: var(--mauve); stroke: var(--mauve); }
+  .e { stroke-dasharray: 40; stroke-dashoffset: 40; animation: draw 6s ease-in-out infinite; stroke: var(--lavender); }
+  .e1, .e2, .e3 { animation-delay: .4s; }
+  .e4, .e5, .e6 { animation-delay: 1.4s; }
+  .n1, .n2, .n3 { animation: light 6s ease-in-out infinite; animation-delay: 1.2s; }
+  .n4, .n5 { animation: light 6s ease-in-out infinite; animation-delay: 2.2s; }
+  @keyframes draw { 0% { stroke-dashoffset: 40; } 20%, 85% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 40; } }
+  @keyframes light { 0% { fill: var(--bg-elev); stroke: var(--ink-faint); } 15%, 80% { fill: var(--lavender-soft); stroke: var(--lavender); } 100% { fill: var(--bg-elev); stroke: var(--ink-faint); } }
+
+  /* Prompt -> generated layout -> select and move an editable element. */
+  .canvas-prompt { fill: var(--lavender-soft); stroke: var(--line); stroke-width: .7; }
+  .prompt-star { fill: var(--lavender); }
+  .browser-dots { fill: var(--ink-faint); }
+  .canvas-layout { animation: layout-appear 8s ease-in-out infinite; }
+  .layout-title, .layout-button { fill: var(--lavender); }
+  .layout-copy { fill: none; stroke: var(--ink-faint); stroke-width: 2; stroke-linecap: round; }
+  .layout-image { fill: var(--lavender-soft); }
+  .landscape-line { fill: none; stroke: var(--sage); stroke-width: 1.7; stroke-linejoin: round; }
+  .landscape-sun { fill: var(--mauve); }
+  .editable-tile { animation: tile-drag 8s ease-in-out infinite; }
+  .selection-box { fill: none; stroke: var(--lavender); stroke-width: .8; }
+  .selection-handles { fill: var(--bg-elev); stroke: var(--lavender); stroke-width: .8; }
+  .selection-box, .selection-handles { animation: select-tile 8s ease-in-out infinite; }
+  .canvas-cursor { fill: var(--ink); stroke: var(--bg-elev); stroke-width: 1; animation: cursor-drag 8s ease-in-out infinite; }
+  @keyframes layout-appear { 0%, 12%, 100% { opacity: 0; } 26%, 90% { opacity: 1; } }
+  @keyframes select-tile { 0%, 30%, 95%, 100% { opacity: 0; } 40%, 86% { opacity: 1; } }
+  @keyframes tile-drag { 0%, 44%, 100% { transform: none; } 60%, 85% { transform: translate(-7px, 3px); } }
+  @keyframes cursor-drag {
+    0%, 22%, 100% { opacity: 0; transform: translate(12px, 8px); }
+    36%, 44% { opacity: 1; transform: none; }
+    60%, 85% { opacity: 1; transform: translate(-7px, 3px); }
+    94% { opacity: 0; transform: translate(-7px, 3px); }
+  }
+
+  /* schedule */
+  .cells rect { fill: var(--sage); opacity: 0; animation: fill-cell 7s ease-in-out infinite; animation-delay: calc(var(--i) * 0.28s); }
+  .cells rect:nth-child(3n) { fill: var(--lavender); }
+  .cells rect:nth-child(4n) { fill: var(--mauve); }
+  @keyframes fill-cell { 0% { opacity: 0; } 8%, 75% { opacity: 1; } 85%, 100% { opacity: 0; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sketch * { animation: none !important; }
+    .e { stroke-dashoffset: 0 !important; }
+    .sh, .cells rect { opacity: 1 !important; transform: none !important; }
+  }
+</style>

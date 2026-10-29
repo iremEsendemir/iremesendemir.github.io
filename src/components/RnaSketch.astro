@@ -1,0 +1,35 @@
+---
+const point = (t: number) => ({
+  x: 12 + t * 216,
+  y: 38 - Math.sin(t * Math.PI * 4) * 24,
+});
+const backbone = Array.from({ length: 121 }, (_, i) => {
+  const p = point(i / 120);
+  return `${i === 0 ? 'M' : 'L'}${p.x.toFixed(2)} ${p.y.toFixed(2)}`;
+}).join(' ');
+const colors = ['lavender', 'sage', 'mauve'];
+const bases = Array.from({ length: 20 }, (_, i) => ({
+  ...point((i + .5) / 20),
+  color: colors[i % colors.length],
+}));
+---
+
+<figure class="rna-sketch">
+  <svg viewBox="0 0 240 76" width="240" height="76" role="img" aria-label="Illustration of a single RNA strand in a horizontal helix">
+    {bases.map((base) => (
+      <path class={`rna-base ${base.color}`} d={`M${base.x} ${base.y} L${base.x + 3} ${38 + (base.y - 38) * .12}`} />
+    ))}
+    <path class="backbone" d={backbone} />
+  </svg>
+</figure>
+
+<style>
+  .rna-sketch { margin-top: 24px; width: 220px; max-width: 100%; }
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+  path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .backbone { stroke: var(--lavender); stroke-width: 5; }
+  .rna-base { stroke-width: 3.5; }
+  .lavender { stroke: var(--lavender); }
+  .sage { stroke: var(--sage); }
+  .mauve { stroke: var(--mauve); }
+</style>

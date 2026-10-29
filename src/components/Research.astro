@@ -1,0 +1,23 @@
+---
+import Section from './Section.astro';
+import RnaSketch from './RnaSketch.astro';
+import { research } from '../data/profile';
+---
+
+<Section id="research" eyebrow="02" title="Research">
+  <div class="card reveal p-6 sm:p-8 grid gap-6 lg:grid-cols-[1fr_minmax(0,1.3fr)] lg:gap-10">
+    <div>
+      <p class="font-mono text-xs text-ink-faint mb-2">{research.period}</p>
+      <h3 class="text-2xl leading-tight"><a href={research.url} class="link" target="_blank" rel="noopener">{research.lab}</a></h3>
+      <p class="text-ink-soft mt-1">{research.role}</p>
+      <p class="text-ink-faint text-sm mt-1">Advised by {research.advisor}</p>
+      <div class="mt-4 flex flex-wrap gap-1.5">
+        {research.tags.map((t) => <span class="tag">{t}</span>)}
+      </div>
+      <RnaSketch />
+    </div>
+    <ul class="space-y-2.5 text-[0.95rem] leading-relaxed text-ink-soft list-disc pl-5 marker:text-lavender">
+      {research.bullets.map((b) => <li>{b}</li>)}
+    </ul>
+  </div>
+</Section>

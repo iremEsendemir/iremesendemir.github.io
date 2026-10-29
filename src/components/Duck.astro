@@ -1,0 +1,208 @@
+---
+// A single, costume-free companion; it stays independent of page scrolling.
+---
+
+<div id="duck" class="duck">
+  <div class="duck-bubble" data-bubble aria-live="polite"></div>
+  <button type="button" class="duck-body" data-duck aria-label="Say hello to the duck">
+    <svg viewBox="0 0 72 60" width="54" height="45" class="duck-svg">
+      <g class="ink">
+        <path class="duck-outline" d="M9 27 C 16 32, 26 34, 38 32 C 36 23, 41 10, 52 10 C 60 10, 65 15, 64.5 22 L 70.5 24 L 63.5 26.5 C 63.5 33, 60.5 37.5, 58 39.5 C 61.5 46, 55 52, 44 53 C 31 55, 17 52, 13 44 C 11 40, 12 34, 9 27 Z" />
+        <path d="M64 24 L 70.5 24" />
+        <path d="M25 41 C 31 37, 40 38, 46 43" />
+        <path class="foot-l" d="M29 53 L 28 58 M24 58 L 32 58" />
+        <path class="foot-r" d="M40 53 L 40 58 M36 58 L 44 58" />
+      </g>
+      <path class="beak" d="M64.5 22 L 70.5 24 L 63.5 26.5 Z" />
+      <circle class="duck-eye" cx="56.5" cy="19.5" r="1.6" />
+    </svg>
+  </button>
+</div>
+
+<style>
+  .duck {
+    --duck-width: 54px;
+    --duck-height: 45px;
+    position: fixed;
+    right: env(safe-area-inset-right, 0px);
+    top: 0;
+    width: var(--duck-height);
+    height: var(--duck-width);
+    z-index: 30;
+    pointer-events: none;
+    will-change: transform;
+  }
+  .duck-body {
+    all: unset;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--duck-width);
+    height: var(--duck-height);
+    display: block;
+    pointer-events: auto;
+    cursor: pointer;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    transform-origin: center;
+  }
+  .duck-svg { display: block; width: var(--duck-width); height: var(--duck-height); overflow: visible; transform-origin: 50% 97%; }
+  .ink { fill: none; stroke: #70501d; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .duck-outline { fill: #f3cf61; }
+  .beak { fill: #e9a03c; }
+  .duck-eye { fill: #45331c; animation: blink 4.5s infinite; transform-origin: 56.5px 19.5px; }
+  .duck-body:focus-visible { outline: 2px solid var(--lavender); outline-offset: 4px; border-radius: 8px; }
+  .duck[data-direction='down'] .duck-body { transform: translate(-50%, -50%) rotate(-90deg) scaleX(-1); }
+
+  .duck[data-state='walk'] .duck-svg { animation: waddle 0.42s ease-in-out infinite; }
+  .duck[data-state='walk'] .foot-l { animation: step 0.42s ease-in-out infinite; }
+  .duck[data-state='walk'] .foot-r { animation: step 0.42s ease-in-out infinite; animation-delay: -0.21s; }
+  .duck[data-state='peck'] .duck-svg { animation: peck 0.5s ease-in-out 2; }
+  .duck[data-state='hop'] .duck-svg { animation: hop 0.5s cubic-bezier(.3,1.4,.6,1) 1; }
+
+  .duck-bubble {
+    position: absolute;
+    top: -8px;
+    left: 40%;
+    transform-origin: 0 0;
+    transform: rotate(-90deg) translate(calc(var(--speech-offset, 0%) + 6px), -50%);
+    background: var(--bg-elev);
+    color: var(--ink);
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    padding: 0.2rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .duck[data-direction='down'] .duck-bubble { top: calc(100% + 8px); --speech-offset: -100%; }
+  .duck-bubble.is-on { opacity: 1; transform: rotate(-90deg) translate(var(--speech-offset, 0%), -50%); }
+
+  @keyframes waddle {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+  }
+  @keyframes step {
+    0%, 50%, 100% { transform: translateY(0); }
+    25% { transform: translateY(-3px); }
+  }
+  @keyframes peck {
+    0%, 100% { transform: rotate(0); }
+    50% { transform: rotate(10deg); }
+  }
+  @keyframes hop {
+    0% { transform: translateY(0) scaleY(1); }
+    30% { transform: translateY(-18px) scaleY(1.05); }
+    100% { transform: translateY(0) scaleY(1); }
+  }
+  @keyframes blink {
+    0%, 92%, 100% { transform: scaleY(1); }
+    95% { transform: scaleY(0.1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .duck-svg, .foot-l, .foot-r, .duck-eye { animation: none !important; }
+  }
+  @media (max-width: 640px) {
+    .duck { --duck-width: 42px; --duck-height: 35px; }
+  }
+</style>
+
+<script>
+  type State = 'idle' | 'walk' | 'peck' | 'hop';
+
+  const root = document.getElementById('duck')!;
+  const body = root.querySelector<HTMLElement>('[data-duck]')!;
+  const bubble = root.querySelector<HTMLElement>('[data-bubble]')!;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const rand = (a: number, b: number) => a + Math.random() * (b - a);
+
+  // --- Movement ---
+  const bounds = () => {
+    const max = Math.max(0, window.innerHeight - (root.offsetHeight || 54) - 16);
+    return { min: Math.min(80, max), max };
+  };
+  let y = Math.max(bounds().min, Math.min(window.innerHeight * 0.7, bounds().max));
+  let dir: 1 | -1 = 1;
+  let state: State = 'idle';
+  let until = 0;
+  let last = performance.now();
+  const SPEED = 38; // px per second
+
+  const set = (s: State, ms: number) => {
+    state = s;
+    until = performance.now() + ms;
+    root.dataset.state = s;
+  };
+  const direction = (d: 1 | -1) => {
+    dir = d;
+    root.dataset.direction = d === 1 ? 'down' : 'up';
+  };
+  const place = () => {
+    root.style.transform = `translate3d(0, ${y}px, 0)`;
+  };
+  const pick = () => {
+    const r = Math.random();
+    if (r < 0.55) {
+      if (Math.random() < 0.3) direction(dir === 1 ? -1 : 1);
+      set('walk', rand(1500, 4500));
+    } else if (r < 0.8) set('idle', rand(1200, 3500));
+    else set('peck', 1000);
+  };
+
+  const tick = (now: number) => {
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+    const speaking = bubble.classList.contains('is-on');
+    if (state === 'walk' && !speaking) {
+      y += dir * SPEED * dt;
+      const { min, max } = bounds();
+      if (y > max) { y = max; direction(-1); }
+      if (y < min) { y = min; direction(1); }
+      place();
+    }
+    if (now > until && !speaking) pick();
+    requestAnimationFrame(tick);
+  };
+
+  // --- Talking ---
+  const lines = ['quack quack', 'quackk', '🦆'];
+  let bubbleTimer: number | undefined;
+  const fitSpeech = () => {
+    if (!bubble.classList.contains('is-on')) return;
+    const space = bubble.offsetWidth + 16;
+    const headerBottom = document.querySelector('body > header')?.getBoundingClientRect().bottom ?? 0;
+    y = dir === 1
+      ? Math.min(y, Math.max(0, window.innerHeight - root.offsetHeight - space))
+      : Math.max(y, headerBottom + space);
+  };
+  const say = (text: string) => {
+    bubble.textContent = text;
+    bubble.classList.add('is-on');
+    fitSpeech();
+    place();
+    clearTimeout(bubbleTimer);
+    bubbleTimer = window.setTimeout(() => bubble.classList.remove('is-on'), 1400);
+  };
+
+  body.addEventListener('click', () => {
+    if (!reduced) set('hop', 520);
+    say(lines[Math.floor(Math.random() * lines.length)]);
+  });
+
+  // --- Boot ---
+  direction(1);
+  place();
+  if (reduced) {
+    set('idle', Infinity);
+  } else {
+    set('idle', 900);
+    requestAnimationFrame(tick);
+  }
+  window.addEventListener('resize', () => {
+    y = Math.max(bounds().min, Math.min(y, bounds().max));
+    fitSpeech();
+    place();
+  });
+</script>

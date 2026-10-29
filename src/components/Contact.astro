@@ -1,0 +1,24 @@
+---
+import { profile } from '../data/profile';
+---
+
+<section id="contact" class="scroll-mt-20 py-20 sm:py-28">
+  <div class="mx-auto max-w-5xl px-5 sm:px-8 reveal">
+    <p class="eyebrow mb-3">06</p>
+    <h2 class="text-4xl sm:text-5xl lg:text-6xl leading-tight max-w-3xl">
+      Get in touch.
+    </h2>
+    <p class="mt-4 text-ink-soft max-w-xl">Email is the fastest way to reach me. Open to internships, new-grad roles, and research conversations.</p>
+    <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-base">
+      <a href={`mailto:${profile.email}`} class="link">{profile.email}</a>
+      <a href={profile.links.github} target="_blank" rel="noopener" class="link text-ink-soft">GitHub ↗</a>
+      <a href={profile.links.linkedin} target="_blank" rel="noopener" class="link text-ink-soft">LinkedIn ↗</a>
+    </div>
+  </div>
+</section>
+
+<footer class="border-t border-line">
+  <div class="mx-auto max-w-5xl px-5 sm:px-8 py-8 flex flex-wrap justify-between gap-3 text-xs font-mono text-ink-faint">
+    <span>© {new Date().getFullYear()} {profile.name}</span>
+  </div>
+</footer>

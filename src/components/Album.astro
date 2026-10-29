@@ -1,0 +1,67 @@
+---
+import '../styles/album.css';
+import AlbumPanel from './AlbumPanel.astro';
+import AlbumCover from './AlbumCover.astro';
+import { albumSpreads } from '../data/album';
+const leafCount = albumSpreads.length + 1;
+---
+
+<dialog id="album" class="album" aria-labelledby="album-title">
+  <header class="album-chrome">
+    <h2 id="album-title">İrem Esendemir <span>/ Portfolio</span></h2>
+    <button type="button" class="album-x" data-close aria-label="Close album">×</button>
+  </header>
+
+  <div class="album-stage">
+    <div class="album-object" data-book data-position="front">
+      <div class="album-sheets" data-sheets>
+        {Array.from({ length: leafCount }, (_, index) => (
+          <div class="album-sheet" data-sheet={index}>
+            <div class="album-face sheet-front" data-face="front">
+              {index === 0 ? <AlbumCover side="front" /> : (
+                <div class="album-page right-page" data-spread={index} aria-label={albumSpreads[index - 1].label}>
+                  <AlbumPanel panel={albumSpreads[index - 1].right} />
+                  <span class="album-folio">{String(index * 2).padStart(2, '0')}</span>
+                </div>
+              )}
+            </div>
+            <div class="album-face sheet-back" data-face="back" inert>
+              {index === albumSpreads.length ? <AlbumCover side="back" /> : (
+                <div class="album-page left-page" data-spread={index + 1} aria-label={albumSpreads[index].label}>
+                  <AlbumPanel panel={albumSpreads[index].left} />
+                  <span class="album-folio">{String(index * 2 + 1).padStart(2, '0')}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+        <div class="album-gutter" data-gutter aria-hidden="true"></div>
+      </div>
+
+      <div class="album-mobile" data-mobile>
+        <div data-mobile-cover="front"><AlbumCover side="front" /></div>
+        {albumSpreads.map((spread, index) => (
+          <div class="album-spread" data-mobile-spread={index + 1} aria-label={spread.label} hidden>
+            <div class="album-page left-page"><AlbumPanel panel={spread.left} /></div>
+            <div class="album-page right-page"><AlbumPanel panel={spread.right} /></div>
+          </div>
+        ))}
+        <div data-mobile-cover="back" hidden>
+          <AlbumCover side="back" />
+        </div>
+      </div>
+    </div>
+    <p class="album-loading" data-album-loading role="status" hidden>Loading photographs...</p>
+  </div>
+
+  <nav class="album-nav" aria-label="Album pages">
+    <button type="button" data-prev class="album-nav-btn" aria-label="Previous spread">←</button>
+    <p data-page aria-live="polite">Front cover</p>
+    <button type="button" data-next class="album-nav-btn" aria-label="Open album">→</button>
+  </nav>
+  <p class="album-hint">Turn with the arrows · Select a photograph for a closer look</p>
+</dialog>
+
+<script>
+  import '../scripts/album';
+</script>

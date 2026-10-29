@@ -1,0 +1,23 @@
+---
+import type { Img } from '../data/profile';
+interface Props {
+  images: Img[];
+  layout?: 'featured' | 'grid';
+}
+const { images, layout = 'featured' } = Astro.props;
+---
+
+<div class={`grid items-start gap-4 ${layout === 'grid' ? 'sm:grid-cols-2' : 'grid-cols-2'}`}>
+  {images.map((image, index) => (
+    <button
+      type="button"
+      data-lightbox={image.full ?? image.src}
+      data-alt={image.alt}
+      class={`window min-w-0 cursor-zoom-in text-left ${layout === 'featured' && (index === 0 || images.length === 2) ? 'col-span-2' : ''}`}
+      aria-label={`View larger: ${image.alt}`}
+    >
+      <div class="window-bar"><i></i><i></i><i></i><span class="ml-1 truncate">{image.title}</span></div>
+      <img src={image.src} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" class="block w-full h-auto" />
+    </button>
+  ))}
+</div>

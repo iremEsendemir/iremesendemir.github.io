@@ -1,0 +1,60 @@
+---
+import { profile } from '../data/profile';
+const nav = [
+  { href: '#experience', label: 'Experience' },
+  { href: '#research', label: 'Research' },
+  { href: '#projects', label: 'Projects' },
+  { href: '#education', label: 'Education' },
+  { href: '#awards', label: 'Awards' },
+  { href: '#contact', label: 'Contact' },
+];
+---
+
+<header class="sticky top-0 z-40 bg-bg border-b border-line/70">
+  <div class="mx-auto max-w-5xl px-5 sm:px-8 h-14 flex items-center justify-between gap-4">
+    <a href="#top" class="font-display text-lg tracking-tight">{profile.shortName}</a>
+    <nav class="hidden md:flex items-center gap-6 text-sm text-ink-soft">
+      {nav.map((n) => <a href={n.href} class="hover:text-ink transition-colors">{n.label}</a>)}
+    </nav>
+    <div class="flex items-center gap-2">
+    <button
+      id="theme-toggle"
+      type="button"
+      class="grid place-items-center size-9 text-ink-soft border border-line rounded-full hover:border-ink hover:text-ink transition-colors"
+      aria-label="Switch to dark theme"
+      title="Switch to dark theme"
+    >
+      <svg class="theme-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2 M12 20v2 M2 12h2 M20 12h2 M5 5l1.5 1.5 M17.5 17.5L19 19 M5 19l1.5-1.5 M17.5 6.5L19 5" />
+      </svg>
+      <svg class="theme-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20.5 14A9 9 0 0 1 10 3.5 9 9 0 1 0 20.5 14Z" />
+      </svg>
+    </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .theme-sun { display: none; }
+  :global([data-theme='dark']) .theme-sun { display: block; }
+  :global([data-theme='dark']) .theme-moon { display: none; }
+</style>
+
+<script>
+  const btn = document.getElementById('theme-toggle')!;
+  const root = document.documentElement;
+  const sync = () => {
+    const action = root.dataset.theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+    btn.setAttribute('aria-label', action);
+    btn.setAttribute('title', action);
+  };
+  sync();
+  btn.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch {}
+    sync();
+  });
+</script>

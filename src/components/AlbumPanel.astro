@@ -1,0 +1,57 @@
+---
+import Sketch from './Sketch.astro';
+import type { AlbumPanel } from '../data/album';
+
+interface Props { panel: AlbumPanel; }
+const { panel } = Astro.props;
+---
+
+<div class={`album-panel ${panel.kind ?? 'notes'}`}>
+  <p class="album-kicker">{panel.kicker}</p>
+  {panel.school ? (
+    <article class="academic-entry">
+      <h3 class="academic-title">{panel.school.school}</h3>
+      <p class="album-subtitle">{panel.school.degree}</p>
+      <p class="album-meta">{panel.school.period} · {panel.school.location}</p>
+      {panel.school.facts && (
+        <dl class="academic-facts">
+          {panel.school.facts.map((fact) => <div><dt>{fact.label}</dt><dd>{fact.value}</dd></div>)}
+        </dl>
+      )}
+      <div class="academic-note">
+        <p class="album-kicker">{panel.school.facts ? 'Comprehensive scholarship' : 'Erasmus exchange'}</p>
+        <p class="album-copy">{panel.school.note}</p>
+      </div>
+    </article>
+  ) : (
+    <>
+      <h3 class="album-heading">{panel.title}</h3>
+      {panel.subtitle && <p class="album-subtitle">{panel.subtitle}</p>}
+      {panel.meta && <p class="album-meta">{panel.meta}</p>}
+
+      {panel.kind === 'images' && panel.images && (
+        <div class={`album-photos count-${panel.images.length}`}>
+          {panel.images.map((image, index) => (
+            <figure class="album-photo">
+              <button type="button" data-lightbox={image.full ?? image.src} data-alt={image.alt} aria-label={`Enlarge ${image.title}`}>
+                <img src={image.src} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" />
+                <span class="album-image-fallback">Preview unavailable. Open image.</span>
+              </button>
+              <figcaption><span>{String(index + 1).padStart(2, '0')}</span>{image.title}</figcaption>
+            </figure>
+          ))}
+        </div>
+      )}
+
+      {panel.sketch && <Sketch kind={panel.sketch} class="album-sketch" />}
+      {panel.paragraphs?.map((paragraph) => <p class="album-copy">{paragraph}</p>)}
+      {panel.bullets && <ul class="album-bullets">{panel.bullets.map((bullet) => <li>{bullet}</li>)}</ul>}
+      {panel.tags && <div class="album-tags">{panel.tags.map((tag) => <span>{tag}</span>)}</div>}
+      {panel.links && (
+        <div class="album-links">
+          {panel.links.map((link) => <a href={link.href} target="_blank" rel="noopener" class="link">{link.label} ↗</a>)}
+        </div>
+      )}
+    </>
+  )}
+</div>

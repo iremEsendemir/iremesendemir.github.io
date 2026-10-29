@@ -1,0 +1,26 @@
+---
+import { profile } from '../data/profile';
+
+interface Props { side: 'front' | 'back'; }
+const { side } = Astro.props;
+---
+
+<div class={`album-cover album-${side}`} data-cover={side}>
+  {side === 'front' ? (
+    <>
+      <div class="cover-title"><h3>İrem<br />Esendemir</h3><p>Computer Science · Bilkent University</p></div>
+      <div class="cover-photo"><img src={profile.photo} alt={profile.photoAlt} width="400" height="400" /></div>
+      <div class="cover-bottom"><span>Portfolio</span><button type="button" data-cover-open>Open →</button></div>
+    </>
+  ) : (
+    <>
+      <div class="cover-title"><h3>Contact</h3><p>{profile.shortName}</p></div>
+      <div class="back-contact">
+        <a href={`mailto:${profile.email}`}>{profile.email}</a>
+        <a href={profile.links.github} target="_blank" rel="noopener">GitHub ↗</a>
+        <a href={profile.links.linkedin} target="_blank" rel="noopener">LinkedIn ↗</a>
+      </div>
+      <div class="cover-bottom"><button type="button" data-restart>Back to cover ↺</button></div>
+    </>
+  )}
+</div>

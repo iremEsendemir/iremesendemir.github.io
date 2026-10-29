@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+---
+
+<Base title="Page not found · İrem Esendemir" description="The page you're looking for doesn't exist or has moved.">
+  <Header />
+  <main class="mx-auto max-w-5xl px-5 sm:px-8 min-h-[70dvh] flex flex-col justify-center py-24">
+    <p class="eyebrow mb-4">404</p>
+    <h1 class="text-5xl sm:text-6xl lg:text-7xl leading-[1.02]">Page not found.</h1>
+    <p class="mt-5 text-lg text-ink-soft max-w-xl">
+      The page you're looking for doesn't exist or has moved.
+    </p>
+    <div class="mt-8">
+      <a href="/" class="inline-flex items-center gap-2 rounded-full border border-ink/30 text-ink px-4 py-2 text-sm hover:border-ink hover:bg-accent-soft transition-colors">
+        ← Back to the homepage
+      </a>
+    </div>
+  </main>
+</Base>

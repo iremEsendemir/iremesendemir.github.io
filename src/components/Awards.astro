@@ -1,0 +1,30 @@
+---
+import Section from './Section.astro';
+import { awards, volunteering } from '../data/profile';
+---
+
+<Section id="awards" eyebrow="05" title="Awards & other">
+  <div class="grid gap-12 lg:grid-cols-[minmax(0,1.3fr)_1fr] lg:gap-14">
+    <div class="reveal">
+      <h3 class="text-xl mb-5">Awards & programs</h3>
+      <ul class="divide-y divide-line border-y border-line">
+        {awards.map((a) => (
+          <li class="py-3.5 flex gap-4 items-baseline">
+            <span class="font-mono text-xs text-ink-faint w-12 shrink-0">{a.year}</span>
+            <div>
+              <p class="text-[0.95rem]">{a.title}</p>
+              <p class="text-ink-faint text-sm">{a.by}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <div class="reveal">
+      <h3 class="text-xl mb-3">Volunteering</h3>
+      <p class="text-ink-soft text-sm mb-3">{volunteering.org}</p>
+      <ul class="space-y-2.5 text-[0.95rem] leading-relaxed text-ink-soft list-disc pl-5 marker:text-lavender">
+        {volunteering.items.map((v) => <li>{v}</li>)}
+      </ul>
+    </div>
+  </div>
+</Section>

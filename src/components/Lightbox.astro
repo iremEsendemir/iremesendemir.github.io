@@ -1,0 +1,86 @@
+---
+// Full-resolution image viewer, opened by any element with [data-lightbox].
+---
+
+<dialog id="lightbox" class="lightbox">
+  <button type="button" class="lightbox-close" data-close aria-label="Close">×</button>
+  <figure class="m-0">
+    <img data-img alt="" />
+    <figcaption data-cap class="font-mono text-xs text-center mt-3 opacity-70"></figcaption>
+  </figure>
+</dialog>
+
+<style>
+  .lightbox {
+    margin: auto;
+    border: 0;
+    padding: 1.25rem;
+    max-width: min(96vw, 1600px);
+    max-height: 96vh;
+    background: var(--bg-elev);
+    color: var(--ink);
+    border-radius: var(--radius);
+    box-shadow: 0 30px 80px -20px rgb(0 0 0 / 0.4);
+  }
+  .lightbox::backdrop {
+    background: rgb(20 16 12 / 0.6);
+    backdrop-filter: blur(4px);
+  }
+  .lightbox img {
+    display: block;
+    max-width: 100%;
+    max-height: calc(96vh - 5rem);
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    border-radius: calc(var(--radius) / 2);
+  }
+  .lightbox-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    background: none;
+    border: 0;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  const dlg = document.getElementById('lightbox') as HTMLDialogElement;
+  const img = dlg.querySelector<HTMLImageElement>('[data-img]')!;
+  const cap = dlg.querySelector<HTMLElement>('[data-cap]')!;
+
+  document.addEventListener('click', (e) => {
+    const t = (e.target as HTMLElement).closest<HTMLElement>('[data-lightbox]');
+    if (!t) return;
+    img.src = t.dataset.lightbox!;
+    img.alt = t.dataset.alt ?? '';
+    cap.textContent = t.dataset.alt ?? '';
+    dlg.showModal();
+  });
+
+  // Never upscale past the source resolution; low-res screenshots stay crisp instead of blurry.
+  img.addEventListener('load', () => {
+    img.style.maxWidth = `min(100%, ${img.naturalWidth}px)`;
+  });
+
+  dlg.addEventListener('click', (e) => {
+    if (e.target === dlg || (e.target as HTMLElement).closest('[data-close]')) dlg.close();
+  });
+  // Escape closes the photograph, not the album underneath it.
+  dlg.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    e.preventDefault();
+    e.stopPropagation();
+  });
+  dlg.addEventListener('keyup', (e) => {
+    if (e.key !== 'Escape') return;
+    e.preventDefault();
+    e.stopPropagation();
+    dlg.close();
+  });
+  dlg.addEventListener('close', () => { img.removeAttribute('src'); });
+</script>

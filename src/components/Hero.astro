@@ -1,0 +1,34 @@
+---
+import { profile } from '../data/profile';
+---
+
+<section id="top" class="pt-16 sm:pt-24 pb-12 sm:pb-16">
+  <div class="mx-auto max-w-5xl px-5 sm:px-8 grid gap-10 md:grid-cols-[1fr_auto] md:items-center">
+    <div class="reveal">
+      <p class="eyebrow mb-4">{profile.location}</p>
+      <h1 class="text-5xl sm:text-6xl lg:text-7xl leading-[1.02]">
+        Hi, I'm İrem.
+      </h1>
+      <p class="mt-5 text-lg sm:text-xl text-ink-soft max-w-xl">{profile.tagline}.</p>
+      <p class="mt-4 text-base sm:text-lg text-ink-soft max-w-xl leading-relaxed">{profile.intro}</p>
+      <div class="mt-8 flex flex-wrap items-center gap-3 text-sm">
+        <a href={profile.links.github} class="link text-ink-soft" target="_blank" rel="noopener">GitHub</a>
+        <a href={profile.links.linkedin} class="link text-ink-soft" target="_blank" rel="noopener">LinkedIn</a>
+        <a href={`mailto:${profile.email}`} class="link text-ink-soft">Email</a>
+      </div>
+    </div>
+    <div class="reveal justify-self-center md:justify-self-end">
+      <div class="photo-frame w-48 sm:w-60 md:w-64">
+        <img
+          src={profile.photo}
+          alt={profile.photoAlt}
+          width="400"
+          height="400"
+          class="block w-full aspect-square object-cover"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+    </div>
+  </div>
+</section>
